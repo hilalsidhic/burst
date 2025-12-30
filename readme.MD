@@ -1,10 +1,16 @@
+![Build](https://github.com/hilalsidhic/burst/actions/workflows/burst.yml/badge.svg)
 # Burst
+
 
 **JUnit-native performance regression assertions for Java, powered by JMH.**
 
 Burst allows developers to express **performance expectations directly inside JUnit tests** and fail the build when performance regresses — without writing JMH benchmarks or managing baselines.
 
 ---
+## Why Burst?
+
+Because performance regressions should fail tests,
+not appear months later in production.
 
 ## What Burst Is
 
