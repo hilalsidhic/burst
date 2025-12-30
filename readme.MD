@@ -275,7 +275,7 @@ Burst chooses **correctness over convenience**.
 
 ## Compatibility
 
-- Java: 21+
+- Java: 25
 - JUnit: 5.x
 - Build tools: Gradle, Maven
 - CI: GitHub Actions, GitLab CI, Jenkins
