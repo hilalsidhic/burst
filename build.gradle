@@ -1,6 +1,10 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
+
+group = "io.burst"
+version = "1.0.0"
 
 java {
     toolchain {
@@ -13,14 +17,17 @@ repositories {
 }
 
 dependencies {
+    // JUnit 5
     implementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+
     // JMH
     implementation 'org.openjdk.jmh:jmh-core:1.37'
     annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
     testAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
-    // JSON
+
+    // JSON (for burst-results.json)
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
 }
 
@@ -28,17 +35,44 @@ test {
     useJUnitPlatform()
     jvmArgs '--enable-preview'
 
-    test {
-        systemProperty "burst.enabled", "true"
-    }
+    // Burst enabled by default
+    systemProperty "burst.enabled", "true"
 
     testLogging {
         showStandardStreams = true
         events "passed", "failed", "skipped"
     }
+
+    // Exclude generated JMH classes
     exclude '**/*_jmhType*.class'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += '--enable-preview'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            groupId = "io.burst"
+            artifactId = "burst-junit"
+            version = "1.0.0"
+        }
+    }
+
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/hilalsidhic/burst")
+
+            credentials {
+                username = project.findProperty("gpr.user")
+                        ?: System.getenv("GITHUB_ACTOR")
+                password = project.findProperty("gpr.key")
+                        ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+    }
 }

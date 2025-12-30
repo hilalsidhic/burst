@@ -29,6 +29,66 @@ Burst intentionally focuses on **small, repeatable, CI-safe performance checks**
 
 ---
 
+## Installation
+
+Burst is published to **GitHub Packages**.
+
+### Maven
+
+```xml
+<repositories>
+  <repository>
+    <id>github</id>
+    <url>https://maven.pkg.github.com/hilalsidhic/burst</url>
+  </repository>
+</repositories>
+
+<dependency>
+  <groupId>io.burst</groupId>
+  <artifactId>burst-junit</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+
+### Gradle
+
+```gradle
+repositories {
+    maven {
+        url = uri("https://maven.pkg.github.com/hilalsidhic/burst")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
+}
+
+dependencies {
+    testImplementation "io.burst:burst-junit:1.0.0"
+}
+```
+
+> GitHub Packages requires authentication even for read access.
+
+---
+
+## Quick Start
+
+1. Add the dependency
+2. Annotate a JUnit test with `@BurstBenchmark`
+3. Run tests normally
+
+```bash
+./gradlew test
+```
+
+Burst automatically:
+- calibrates the environment
+- runs the benchmark in a forked JVM
+- fails the test on regression
+
+---
+
 ## Basic Usage
 
 ```java
@@ -86,12 +146,12 @@ BurstExtension (JUnit InvocationInterceptor)
 p95 assertion → PASS / FAIL
 ```
 
-### Key Properties
+### Forking & Warmup Semantics
 
-- Each Burst test runs in a **fresh JVM fork**
-- Warmup and measurement are handled by **JMH**
-- Results are statistically meaningful (sampling + percentiles)
-- No test body is executed directly by JUnit
+- Each `@BurstBenchmark` is executed in a **forked JVM**
+- Warmup and measurement iterations are handled by **JMH**
+- JVM state is not shared across benchmarks
+- Calibration runs once per test JVM and is cached
 
 ---
 
@@ -138,7 +198,27 @@ After the test run, Burst writes a machine-readable report:
 This enables:
 - CI annotations
 - Custom reporting
-- Trend analysis (optional)
+- Optional trend analysis
+
+---
+
+## Failure Example
+
+```
+Performance regression detected
+
+Test:
+  OrderServiceTest#createOrder
+
+Measured:
+  p95 = 34.1 ms
+
+Allowed:
+  25.0 ms (scale = 1.0)
+
+Action:
+  Investigate the regression or update @BurstBenchmark intentionally.
+```
 
 ---
 
@@ -146,7 +226,7 @@ This enables:
 
 Burst is CI-safe by default.
 
-To disable Burst entirely (escape hatch):
+To disable Burst entirely:
 
 ```bash
 ./gradlew test -Dburst.enabled=false
@@ -156,7 +236,7 @@ All tests will pass without running JMH.
 
 ---
 
-## Constraints (Important)
+## Constraints
 
 Because Burst executes benchmarks in a **forked JVM via JMH**, the following constraints apply:
 
@@ -167,6 +247,17 @@ Because Burst executes benchmarks in a **forked JVM via JMH**, the following con
 - No asynchronous work inside benchmark methods
 
 These constraints ensure **correctness, isolation, and reproducibility**.
+
+---
+
+## When NOT to Use Burst
+
+Burst is not suitable when:
+- You need high-concurrency load testing
+- You need historical trend analysis across versions
+- You require system-wide SLA enforcement
+
+Use dedicated load-testing or benchmarking tools in those cases.
 
 ---
 
@@ -182,12 +273,21 @@ Burst chooses **correctness over convenience**.
 
 ---
 
+## Compatibility
+
+- Java: 21+
+- JUnit: 5.x
+- Build tools: Gradle, Maven
+- CI: GitHub Actions, GitLab CI, Jenkins
+
+---
+
 ## Status
 
 **Burst v1.0**
 
 - Core engine complete
-- Calibration implemented
+- Environment calibration implemented
 - CI-safe execution
 - JSON reporting
 - Public API frozen
@@ -196,4 +296,4 @@ Burst chooses **correctness over convenience**.
 
 ## License
 
-MIT
+Apache License 2.0
