@@ -1,4 +1,8 @@
 ![Build](https://github.com/hilalsidhic/burst/actions/workflows/burst.yml/badge.svg)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.hilalsidhic/burst-junit.svg)](
+https://search.maven.org/artifact/io.github.hilalsidhic/burst-junit
+)
+
 # Burst
 
 
@@ -37,27 +41,21 @@ Burst intentionally focuses on **small, repeatable, CI-safe performance checks**
 
 ## Installation
 
-Burst is published to **GitHub Packages**.
+Burst is published to **Maven Central**.
+
+**Maven Central**
 
 ### Maven
 
 ```xml
-<repositories>
-  <repository>
-    <id>github</id>
-    <url>https://maven.pkg.github.com/hilalsidhic/burst</url>
-  </repository>
-</repositories>
 
 <dependencies>
-  <!-- Burst -->
+
   <dependency>
-    <groupId>io.burst</groupId>
+    <groupId>io.github.hilalsidhic</groupId>
     <artifactId>burst-junit</artifactId>
     <version>1.0.0</version>
-    <scope>test</scope>
   </dependency>
-
   <!-- JUnit 5 -->
   <dependency>
     <groupId>org.junit.jupiter</groupId>
@@ -80,20 +78,8 @@ Burst is published to **GitHub Packages**.
     <version>1.10.2</version>
     <scope>test</scope>
   </dependency>
+
 </dependencies>
-
-<repositories>
-  <repository>
-    <id>github</id>
-    <url>https://maven.pkg.github.com/hilalsidhic/burst</url>
-  </repository>
-</repositories>
-
-<dependency>
-  <groupId>io.burst</groupId>
-  <artifactId>burst-junit</artifactId>
-  <version>1.0.0</version>
-</dependency>
 
 GitHub Packages requires authentication.
 Users must configure credentials in ~/.m2/settings.xml.
@@ -104,19 +90,11 @@ Users must configure credentials in ~/.m2/settings.xml.
 ```gradle
 repositories {
     mavenCentral()
-
-    maven {
-        url = uri("https://maven.pkg.github.com/hilalsidhic/burst")
-        credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
-        }
-    }
 }
 
 dependencies {
     // Burst
-    testImplementation "io.burst:burst-junit:1.0.0"
+    testImplementation 'io.github.hilalsidhic:burst-junit:1.0.0'
 
     // JUnit 5
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
@@ -129,11 +107,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-```
-
-> GitHub Packages requires authentication even for read access.
-
----
 
 ## Quick Start
 
