@@ -35,7 +35,6 @@ test {
     useJUnitPlatform()
     jvmArgs '--enable-preview'
 
-    // Burst enabled by default
     systemProperty "burst.enabled", "true"
 
     testLogging {

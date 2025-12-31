@@ -1,0 +1,92 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group = "io.github.hilalsidhic"
+version = "1.0.1"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit 5 (API exposed to consumers)
+    api 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+
+    runtimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+    runtimeOnly 'org.junit.platform:junit-platform-launcher:1.10.2'
+
+    // JMH
+    implementation 'org.openjdk.jmh:jmh-core:1.37'
+    annotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
+    testAnnotationProcessor 'org.openjdk.jmh:jmh-generator-annprocess:1.37'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.1'
+}
+
+test {
+    useJUnitPlatform()
+    systemProperty "burst.enabled", "true"
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            groupId = 'io.github.hilalsidhic'
+            artifactId = 'burst-junit'
+            version = '1.0.0'
+
+            pom {
+                name = 'Burst'
+                description = 'JUnit-native performance regression assertions powered by JMH'
+                url = 'https://github.com/hilalsidhic/burst'
+                inceptionYear = '2025'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'hilal'
+                        name = 'Muhammed Hilal'
+                        email = 'hilalsidhic21@gmail.com'
+                    }
+                }
+
+                scm {
+                    url = 'https://github.com/hilalsidhic/burst'
+                    connection = 'scm:git:https://github.com/hilalsidhic/burst.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:hilalsidhic/burst.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = 'BuildRepo'
+            url = layout.buildDirectory.dir('maven-repo')
+        }
+    }
+}
+
+// Optional: Only sign if credentials are configured
+
+signing {
+    sign publishing.publications.maven
+}
