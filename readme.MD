@@ -50,39 +50,13 @@ Burst is published to **Maven Central**.
 ```xml
 
 <dependencies>
-
   <dependency>
     <groupId>io.github.hilalsidhic</groupId>
     <artifactId>burst-junit</artifactId>
     <version>1.0.0</version>
   </dependency>
-  <!-- JUnit 5 -->
-  <dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-api</artifactId>
-    <version>5.10.2</version>
-    <scope>test</scope>
-  </dependency>
-
-  <dependency>
-    <groupId>org.junit.jupiter</groupId>
-    <artifactId>junit-jupiter-engine</artifactId>
-    <version>5.10.2</version>
-    <scope>test</scope>
-  </dependency>
-
-  <!-- REQUIRED for Gradle 9+ / modern builds -->
-  <dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-launcher</artifactId>
-    <version>1.10.2</version>
-    <scope>test</scope>
-  </dependency>
-
 </dependencies>
 
-GitHub Packages requires authentication.
-Users must configure credentials in ~/.m2/settings.xml.
 ```
 
 ### Gradle
@@ -95,13 +69,6 @@ repositories {
 dependencies {
     // Burst
     testImplementation 'io.github.hilalsidhic:burst-junit:1.0.0'
-
-    // JUnit 5
-    testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
-    testRuntimeOnly  "org.junit.jupiter:junit-jupiter-engine:5.10.2"
-
-    // REQUIRED for Gradle 9+
-    testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.10.2"
 }
 
 test {
